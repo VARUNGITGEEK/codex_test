@@ -1,0 +1,73 @@
+version: 3
+
+# Global Atlantis behavior for this repository.
+automerge: false # Prevent auto-merging after apply; keep merge decision manual.
+parallel_plan: true # Allow plan jobs for different projects to run concurrently.
+parallel_apply: true # Allow apply jobs for different projects to run concurrently.
+
+projects:
+  # Each project maps to one Terraform root directory (one environment).
+  # Atlantis runs terraform in that folder when a PR touches matching files.
+  - name: dev
+    dir: environments/dev
+    workspace: default
+    terraform_version: v1.8.5
+    autoplan:
+      # If any module code or env-local tf/tfvars changes, run plan automatically.
+      when_modified:
+        - "../../modules/**/*.tf"
+        - "**/*.tf"
+        - "*.tfvars"
+      enabled: true
+    # Require approvals and clean mergeability before apply is allowed.
+    apply_requirements: [approved, mergeable]
+
+  - name: qa
+    dir: environments/qa
+    workspace: default
+    terraform_version: v1.8.5
+    autoplan:
+      when_modified:
+        - "../../modules/**/*.tf"
+        - "**/*.tf"
+        - "*.tfvars"
+      enabled: true
+    apply_requirements: [approved, mergeable]
+
+  - name: stage
+    dir: environments/stage
+    workspace: default
+    terraform_version: v1.8.5
+    autoplan:
+      when_modified:
+        - "../../modules/**/*.tf"
+        - "**/*.tf"
+        - "*.tfvars"
+      enabled: true
+    apply_requirements: [approved, mergeable]
+
+  - name: prod
+    dir: environments/prod
+    workspace: default
+    terraform_version: v1.8.5
+    autoplan:
+      when_modified:
+        - "../../modules/**/*.tf"
+        - "**/*.tf"
+        - "*.tfvars"
+      enabled: true
+    apply_requirements: [approved, mergeable]
+
+workflows:
+  # Shared workflow used by all projects above.
+  default:
+    plan:
+      steps:
+        - init
+        - plan:
+            # -input=false: non-interactive CI behavior
+            # -lock-timeout=5m: wait for state lock contention before failing
+            extra_args: ["-input=false", "-lock-timeout=5m"]
+    apply:
+      steps:
+        - apply
