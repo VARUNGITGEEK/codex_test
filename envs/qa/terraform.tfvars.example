@@ -1,0 +1,14 @@
+aws_region    = "us-west-2"
+aws_profile   = null
+name          = "codex-ec2-qa"
+ami_id        = "ami-0123456789abcdef0"
+instance_type = "t3.micro"
+key_name      = null
+ssh_cidr      = "203.0.113.10/32"
+
+tags = {
+  Environment = "qa"
+  ManagedBy   = "terraform"
+  Project     = "codex-test"
+}
+

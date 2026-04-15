@@ -1,0 +1,61 @@
+version: 3
+automerge: false
+delete_source_branch_on_merge: true
+parallel_plan: true
+parallel_apply: false
+
+projects:
+  - name: ec2-dev
+    dir: envs/dev
+    workspace: default
+    terraform_version: v1.5.7
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "*.hcl"
+        - "../../modules/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
+    workflow: terraform
+  - name: ec2-qa
+    dir: envs/qa
+    workspace: default
+    terraform_version: v1.5.7
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "*.hcl"
+        - "../../modules/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
+    workflow: terraform
+  - name: ec2-stage
+    dir: envs/stage
+    workspace: default
+    terraform_version: v1.5.7
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "*.hcl"
+        - "../../modules/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
+    workflow: terraform
+
+workflows:
+  terraform:
+    plan:
+      steps:
+        - init:
+            extra_args:
+              - "-backend-config=backend.hcl"
+        - plan
+    apply:
+      steps:
+        - apply
