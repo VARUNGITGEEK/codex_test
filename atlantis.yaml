@@ -1,0 +1,44 @@
+version: 3
+automerge: false
+parallel_plan: true
+parallel_apply: false
+
+projects:
+  - name: dev
+    dir: envs/dev
+    workspace: default
+    terraform_version: v1.7.5
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "../../modules/subnets/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
+
+  - name: stage
+    dir: envs/stage
+    workspace: default
+    terraform_version: v1.7.5
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "../../modules/subnets/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
+
+  - name: prod
+    dir: envs/prod
+    workspace: default
+    terraform_version: v1.7.5
+    autoplan:
+      enabled: true
+      when_modified:
+        - "*.tf"
+        - "../../modules/subnets/**/*.tf"
+    apply_requirements:
+      - approved
+      - mergeable
