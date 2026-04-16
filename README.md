@@ -23,9 +23,3 @@ terraform -chdir=envs/dev init -backend-config=backend.hcl
 terraform -chdir=envs/dev plan
 terraform -chdir=envs/dev apply
 ```
-
-Repeat the same pattern for `envs/qa` or `envs/stage`.
-
-Atlantis will automatically plan changes for `dev`, `qa`, and `stage` when root
-module or shared module files change. Applies require the pull request to be
-approved and mergeable.
